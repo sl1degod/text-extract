@@ -1,0 +1,25 @@
+{
+    "name": "sl1degod/text-extract",
+    "autoload": {
+        "psr-4": {
+            "Sl1degod\\TextExtract\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "sl1degod",
+            "email": "sl1degod86@gmail.com"
+        }
+    ],
+    "require": {
+        "spatie/pdf-to-text": "^1.52",
+        "phpoffice/phpword": "^1.2",
+        "shuchkin/simplexlsx": "^1.1",
+        "ncjoes/poppler-php": "^1.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
+        }
+    }
+}
