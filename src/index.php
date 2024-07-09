@@ -46,7 +46,7 @@ function extractTextFromDocx($filePath) {
 function extractTextFromPdf($filePath)
 {
     try {
-        $binPath = 'C:/Program Files/poppler-24.02.0/Library/bin/pdftotext.exe';
+        $binPath = 'C:/Program Files/poppler-24.02.0/Library/bin/pdftotext.exe //Заменить на своей местоположение
         $text = (new Pdf($binPath))
             ->setPdf($filePath)
             ->text();
