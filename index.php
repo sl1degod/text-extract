@@ -1,11 +1,10 @@
 <?php
 
-require '../vendor/autoload.php';
+require './vendor/autoload.php';
 
 use Spatie\PdfToText\Pdf;
 use PhpOffice\PhpWord\IOFactory as WordIOFactory;
 
-// die('я тут бро');
 
 function extractTextFromDocx($filePath)
 {
@@ -43,37 +42,54 @@ function extractTextFromDocx($filePath)
 
 function extractTextFromPdf($filePath)
 {
-    $binPath = 'C:\Program Files\poppler-24.07.0\Library\bin\pdftotext.exe';
-    $tempDir = sys_get_temp_dir();
-
     try {
-        $pdfToText = new Pdf($binPath);
-        var_dump($filePath);
-        die($filePath);
-        $text = $pdfToText->setPdf($filePath)->text();
-        $command = "pdftoppm -r 300 -jpeg " . escapeshellarg($filePath) . " " . escapeshellarg($tempDir . '/page');
-        shell_exec($command);
+        $binPath = 'C:/Program Files/poppler-24.07.0/Library/bin/pdftotext.exe';
+        $text = (new Pdf($binPath))
+            ->setPdf($filePath)
+            ->text();
 
-        $pageCount = 1;
-        while (true) {
-            $jpgFile = $tempDir . "/page-{$pageCount}.jpg";
-            if (!file_exists($jpgFile)) {
-                break;
+        if ($text == null) {
+            $tempDir = sys_get_temp_dir();
+            try {
+
+                $files = glob($tempDir . '/page*.jpg');
+                foreach ($files as $file) {
+                    if (is_file($file)) {
+                        unlink($file);
+                    }
+                }
+
+                $command = "pdftoppm -r 300 -jpeg " . escapeshellarg($filePath) . " " . escapeshellarg($tempDir . '/page');
+
+                shell_exec($command);
+
+                $text = '';
+
+                $pageCount = 1;
+                while (true) {
+                    $jpgFile = $tempDir . "/page-{$pageCount}.jpg";
+                    if (!file_exists($jpgFile)) {
+                        break;
+                    }
+                    $language = 'rus + eng';
+                    $output = shell_exec("tesseract " . escapeshellarg($jpgFile) . " stdout -l " . $language);
+
+                    $text .= $output . "\n\n";
+
+                    unlink($jpgFile);
+
+                    $pageCount++;
+                }
+                return $text;
+            } catch (Exception $e) {
+                return "Error: " . $e->getMessage();
             }
-
-            $language = 'rus+eng';
-            $output = shell_exec("tesseract " . escapeshellarg($jpgFile) . " stdout -l " . $language);
-
-            $text .= "\n\n" . $output;
-
-            unlink($jpgFile);
-            $pageCount++;
         }
-
-        return $text;
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
         return "Error: " . $e->getMessage();
     }
+    return $text;
 }
 
 function extractTextFromImage($filePath, $language = 'rus+eng')
@@ -101,8 +117,8 @@ function handleUpload($file)
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-    var_dump($_FILES['file']);
-    exit;
+    // var_dump($_FILES['file']);
+    // exit;
     $text = handleUpload($_FILES['file']);
     echo $text;
 } else {
