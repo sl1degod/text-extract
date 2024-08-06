@@ -3,7 +3,7 @@
         'name' => 'sl1degod/text-extract',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'be234c402d707dace39a85303224edde2b45982e',
+        'reference' => '0058f76204828f73303da81e2a9ba3bc64a26b78',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -121,7 +121,7 @@
         'sl1degod/text-extract' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'be234c402d707dace39a85303224edde2b45982e',
+            'reference' => '0058f76204828f73303da81e2a9ba3bc64a26b78',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

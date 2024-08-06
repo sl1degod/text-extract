@@ -5,6 +5,8 @@ require '../vendor/autoload.php';
 use Spatie\PdfToText\Pdf;
 use PhpOffice\PhpWord\IOFactory as WordIOFactory;
 
+// die('я тут бро');
+
 function extractTextFromDocx($filePath)
 {
     try {
@@ -46,6 +48,8 @@ function extractTextFromPdf($filePath)
 
     try {
         $pdfToText = new Pdf($binPath);
+        var_dump($filePath);
+        die($filePath);
         $text = $pdfToText->setPdf($filePath)->text();
         $command = "pdftoppm -r 300 -jpeg " . escapeshellarg($filePath) . " " . escapeshellarg($tempDir . '/page');
         shell_exec($command);
@@ -89,8 +93,7 @@ function handleUpload($file)
             return extractTextFromPdf($filePath);
         case 'docx':
             return extractTextFromDocx($filePath);
-        case 'jpg':
-        case 'jpeg':
+        case 'jpg' || 'jpeg':
             return extractTextFromImage($filePath);
         default:
             return "Unsupported file format.";
@@ -98,8 +101,10 @@ function handleUpload($file)
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
+    var_dump($_FILES['file']);
+    exit;
     $text = handleUpload($_FILES['file']);
-    echo nl2br(htmlspecialchars($text));
+    echo $text;
 } else {
     echo 'Please upload a document.';
 }
